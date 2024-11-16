@@ -9,7 +9,7 @@ import { CuboidCollider, BallCollider, Physics, RigidBody } from '@react-three/r
 import { EffectComposer, N8AO } from '@react-three/postprocessing'
 import { easing } from 'maath'
 
-const accents = ['#00ffd7', '#ff4031']
+const accents = [ '#fff','#00ffd7', '#ff4031']
 const shuffle = (accent = 0) => [
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
