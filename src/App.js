@@ -9,11 +9,11 @@ import { CuboidCollider, BallCollider, Physics, RigidBody } from '@react-three/r
 import { EffectComposer, N8AO } from '@react-three/postprocessing'
 import { easing } from 'maath'
 
-const accents = ['#4060ff', '#20ffa0', '#ff4060', '#ffcc00']
+const accents = ['#00ffd7', '#ff4031']
 const shuffle = (accent = 0) => [
-  { color: '#444', roughness: 0.1 },
-  { color: '#444', roughness: 0.75 },
-  { color: '#444', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
@@ -25,7 +25,7 @@ const shuffle = (accent = 0) => [
 
 export const App = () => (
   <div className="container">
-    <div className="nav">
+    {/* <div className="nav">
       <h1 className="label" />
       <div />
       <span className="caption" />
@@ -34,7 +34,7 @@ export const App = () => (
         <div className="button">VISIT LUSION</div>
       </a>
       <div className="button gray">///</div>
-    </div>
+    </div> */}
     <Scene style={{ borderRadius: 0 }} />
   </div>
 )
@@ -43,8 +43,8 @@ function Scene(props) {
   const [accent, click] = useReducer((state) => ++state % accents.length, 0)
   const connectors = useMemo(() => shuffle(accent), [accent])
   return (
-    <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 15], fov: 17.5, near: 1, far: 20 }} {...props}>
-      <color attach="background" args={['#141622']} />
+    <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 15], fov: 27.5, near: 1, far: 40 }} {...props}>
+      <color attach="background" args={['#fff']} />
       <ambientLight intensity={0.4} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       <Physics /*debug*/ gravity={[0, 0, 0]} colliders="false"
@@ -91,10 +91,10 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
   const pos = useMemo(() => position || [r(10), r(10), r(10)], [])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(0.1))
+    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(3.1))
   })
   return (
-    <RigidBody gravityScale={1} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={2}>
+    <RigidBody gravityScale={1} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={0}>
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
       {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
@@ -106,15 +106,16 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
   )
 }
 
+
 function ConnectorV({ position, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
   const api = useRef()
   const pos = useMemo(() => position || [r(10), r(10), r(10)], [])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(0.1))
+    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(3.1))
   })
   return (
-    <RigidBody gravityScale={1} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={2}>
+    <RigidBody gravityScale={1} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={0}>
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
       {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
@@ -148,6 +149,16 @@ function TModel({ children, color = 'white', roughness = 0, ...props }) {
 
   return (
     <mesh ref={ref} castShadow receiveShadow scale={2.25} geometry={nodes.контейнер_.geometry}>
+      <meshStandardMaterial metalness={0.2} roughness={roughness}  map={materials.map}/>
+      {/* <meshStandardMaterial metalness={0.2} roughness={roughness} /> */}
+      {children}
+    </mesh>
+  )
+}
+
+function SModel({}) {
+  return (
+    <mesh ref={ref} scale={2.25} geometry={nodes.контейнер_.geometry}>
       <meshStandardMaterial metalness={0.2} roughness={roughness}  map={materials.map}/>
       {/* <meshStandardMaterial metalness={0.2} roughness={roughness} /> */}
       {children}
