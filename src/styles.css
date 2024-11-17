@@ -94,7 +94,7 @@ a {
 
 @media (max-width: 1200px) {
   .container {
-    padding: 2em 4em 2em 4em;
+    /* padding: 2em 4em 2em 4em; */
     gap: 2em;
   }
   .button {
@@ -118,7 +118,7 @@ a {
     content: 'PMNDRS';
   }
   .container {
-    padding: 2em 3em 2em 3em;
+    /* padding: 2em 3em 2em 3em; */
     gap: 2em;
   }
   .button {
@@ -143,7 +143,7 @@ a {
     content: 'OSS dev collective';
   }
   .container {
-    padding: 2em 2em 2em 2em;
+    /* padding: 2em 2em 2em 2em; */
     gap: 2em;
   }
 }
