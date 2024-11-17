@@ -52,7 +52,7 @@ function Scene(props) {
         numSolverIterations={1}
 
         updateLoop={"independent"}
-        timeStep={1 / 15}
+        // timeStep={1 / 15}
       // frameloop="demand"
       >
         {/* numAdditionalFrictionIterations = 4 */}
@@ -94,7 +94,7 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
     api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(3.1))
   })
   return (
-    <RigidBody gravityScale={1} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={0}>
+    <RigidBody gravityScale={0} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={0}>
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
       {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
@@ -115,7 +115,7 @@ function ConnectorV({ position, children, vec = new THREE.Vector3(), scale, r = 
     api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(3.1))
   })
   return (
-    <RigidBody gravityScale={1} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={0}>
+    <RigidBody gravityScale={0} linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders="cuboid" restitution={0}>
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
       {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
@@ -141,14 +141,14 @@ function Pointer({ vec = new THREE.Vector3() }) {
 
 function TModel({ children, color = 'white', roughness = 0, ...props }) {
   const ref = useRef()
-  const { nodes, materials } = useGLTF('tobacco-v1.glb')
+  const { nodes, materials } = useGLTF('tobacco-container-v2.glb')
 
   useFrame((state, delta) => {
     easing.dampC(ref.current.material.color, color, 0.2, delta)
   })
 
   return (
-    <mesh ref={ref} castShadow receiveShadow scale={2.25} geometry={nodes.контейнер_.geometry}>
+    <mesh ref={ref} castShadow receiveShadow scale={2.25} geometry={nodes.Banca_tabac.geometry}>
       <meshStandardMaterial metalness={0.2} roughness={roughness}  map={materials.map}/>
       {/* <meshStandardMaterial metalness={0.2} roughness={roughness} /> */}
       {children}
