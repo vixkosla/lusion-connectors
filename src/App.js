@@ -7,7 +7,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, MeshTransmissionMaterial, Environment, Lightformer } from '@react-three/drei'
 import { CuboidCollider, BallCollider, Physics, RigidBody } from '@react-three/rapier'
 import { EffectComposer, N8AO } from '@react-three/postprocessing'
-import { easing } from 'maath'
+import { easing, geometry } from 'maath'
 
 const accents = ['#fff', '#00ffd7', '#ff4031']
 const shuffle = (accent = 0) => [
@@ -59,8 +59,10 @@ function Scene(props) {
         {/* numSolverIterations={8} */}
         <Pointer />
         {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
-        {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
         {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
+        {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
+
         {/* <ConnectorV position={[0, 0, 5]}>
           <TModel>
             <MeshTransmissionMaterial clearcoat={1} thickness={0.1} anisotropicBlur={0.1} chromaticAberration={0.1} samples={8} resolution={1024} />
@@ -92,10 +94,10 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
   const pos = useMemo(() => position || [r(10), r(10), r(10)], [])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(1.1))
+    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(0.5))
   })
   return (
-    <RigidBody linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders={false} restitution={0}>
+    <RigidBody linearDamping={8} angularDamping={8} friction={0.9} position={pos} ref={api} colliders={false} restitution={0}>
       {/* gravityScale={5} */}
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
@@ -103,7 +105,7 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
       {/* <CuboidCollider type="trimesh" /> */}
       {/* Пересчитать значения, и ввести руками, для уменьшения нагрузки */}
       {/* <CuboidCollider/> */}
-      <BallCollider args={[1.8]} />
+      <CuboidCollider args={[0.35, 1.35, 0.45]} />
       {children ? children : <Model {...props} />}
       {accent && <pointLight intensity={4} distance={2.5} color={props.color} />}
     </RigidBody>
@@ -138,15 +140,15 @@ function Pointer({ vec = new THREE.Vector3() }) {
     ref.current?.setNextKinematicTranslation(vec.set((mouse.x * viewport.width) / 8, (mouse.y * viewport.height) / 8, 0))
   })
   return (
-    <RigidBody position={[0, 0, 0]} type="kinematicPosition" colliders={false} ref={ref}>
-      <BallCollider args={[0.1]} />
+    <RigidBody position={[0, 0, 0]} type="kinematicPosition" colliders={false} ref={ref} restitution={0}>
+      <BallCollider args={[1]} />
     </RigidBody>
   )
 }
 
 function TModel({ children, color = 'white', roughness = 0, ...props }) {
   const ref = useRef()
-  const { nodes, materials } = useGLTF('tobacco-container-v2.glb')
+  const { nodes, materials } = useGLTF('tobacco-container-v2-v7.glb')
 
   useFrame((state, delta) => {
     easing.dampC(ref.current.material.color, color, 0.2, delta)
@@ -187,9 +189,10 @@ function Model({ children, color = 'white', roughness = 0, ...props }) {
   const ref = useRef()
   // const { nodes, materials } = useGLTF('c-flaconb-v1.glb')
   // const { nodes, materials } = useGLTF('c-transformed.glb')
-  const { nodes, materials } = useGLTF('flacon-v1.glb')
+  const { nodes, materials } = useGLTF('flacon-v1-v3.glb')
   // const { nodes, materials } = useGLTF('tobacco-v1.glb')
   console.log(materials)
+  console.log(geometry)
 
   useFrame((state, delta) => {
     easing.dampC(ref.current.material.color, color, 0.2, delta)
