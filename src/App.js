@@ -17,9 +17,31 @@ const shuffle = (accent = 0) => [
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
-  { color: accents[accent], roughness: 0.1, accent: true },
-  { color: accents[accent], roughness: 0.75, accent: true },
-  { color: accents[accent], roughness: 0.1, accent: true }
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+
+
+  // { color: accents[accent], roughness: 0.1, accent: true },
+  // { color: accents[accent], roughness: 0.75, accent: true },
+  // { color: accents[accent], roughness: 0.1, accent: true }
 ]
 
 
@@ -43,11 +65,12 @@ function Scene(props) {
   const [accent, click] = useReducer((state) => ++state % accents.length, 0)
   const connectors = useMemo(() => shuffle(accent), [accent])
   return (
-    <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 15], fov: 27.5, near: 1, far: 40 }} {...props}>
+    <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 10], rotation: [0, 0, 0], fov: 27.5, near: 1, far: 30 }} {...props}>
       <color attach="background" args={['#fff']} />
-      <ambientLight intensity={0.4} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-      <Physics /*debug*/ gravity={[0, 0, 0]} colliders={false}
+      <ambientLight intensity={0.1} />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={0.1} castShadow />
+      <Physics /*debug*/ colliders="hull"
+        gravity={[0, 0, 0]}
       // numAdditionalFrictionIterations={0}
       // numSolverIterations={1}
 
@@ -60,8 +83,16 @@ function Scene(props) {
         <Pointer />
         {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
         {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
-        {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
-        {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
+        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */}
+        {connectors.map((props, i) => <ConnectorS key={i} {...props} />) /* prettier-ignore */}
+
+
 
         {/* <ConnectorV position={[0, 0, 5]}>
           <TModel>
@@ -74,30 +105,31 @@ function Scene(props) {
           </Model>
         </Connector> */}
       </Physics>
-      <EffectComposer disableNormalPass multisampling={8}>
-        <N8AO distanceFalloff={1} aoRadius={1} intensity={4} />
+      <EffectComposer disableNormalPass multisampling={1}>
+        <N8AO distanceFalloff={1} aoRadius={1} intensity={2} />
       </EffectComposer>
-      <Environment resolution={256}>
+      <Environment preset="warehouse" resolution={128} intensity={0.1}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
-          <Lightformer form="circle" intensity={4} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={2} />
-          <Lightformer form="circle" intensity={2} rotation-y={Math.PI / 2} position={[-5, 1, -1]} scale={2} />
-          <Lightformer form="circle" intensity={2} rotation-y={Math.PI / 2} position={[-5, -1, -1]} scale={2} />
-          <Lightformer form="circle" intensity={2} rotation-y={-Math.PI / 2} position={[10, 1, 0]} scale={8} />
+          {/* <Lightformer form="circle" intensity={4} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={2} /> */}
+          {/* <Lightformer form="circle" intensity={2} rotation-y={Math.PI / 2} position={[-5, 1, -1]} scale={2} /> */}
+          <Lightformer form="circle" intensity={1} rotation-y={Math.PI / 2} position={[-5, -1, -1]} scale={2} />
+          <Lightformer form="circle" intensity={1} rotation-y={-Math.PI / 2} position={[10, 1, 0]} scale={8} />
         </group>
       </Environment>
     </Canvas>
   )
 }
 
-function Connector({ position, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
+function Connector({ position, rotation, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
   const api = useRef()
-  const pos = useMemo(() => position || [r(10), r(10), r(10)], [])
+  const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
+  const rot = useMemo(() => rotation || [r(2 * Math.PI, 2 * Math.PI, 2 * Math.PI)])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(0.5))
+    api.current?.applyImpulseAtPoint(vec.copy(api.current.translation()).negate().multiplyScalar(0.3), new THREE.Vector3(pos.x, pos.y, 0))
   })
   return (
-    <RigidBody linearDamping={8} angularDamping={8} friction={0.9} position={pos} ref={api} colliders={false} restitution={0}>
+    <RigidBody enabledRotations={[true, true, true]} linearDamping={20} angularDamping={200} friction={40} position={pos} ref={api} colliders="cuboid" restitution={0}>
       {/* gravityScale={5} */}
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
@@ -105,9 +137,9 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
       {/* <CuboidCollider type="trimesh" /> */}
       {/* Пересчитать значения, и ввести руками, для уменьшения нагрузки */}
       {/* <CuboidCollider/> */}
-      <CuboidCollider args={[0.35, 1.35, 0.45]} />
+      {/* <CuboidCollider args={[0.35, 1.35, 0.45]} /> */}
       {children ? children : <Model {...props} />}
-      {accent && <pointLight intensity={4} distance={2.5} color={props.color} />}
+      {/* {accent && <pointLight intensity={4} distance={2.5} color={props.color} />} */}
     </RigidBody>
   )
 }
@@ -115,21 +147,42 @@ function Connector({ position, children, vec = new THREE.Vector3(), scale, r = T
 
 function ConnectorV({ position, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
   const api = useRef()
-  const pos = useMemo(() => position || [r(10), r(10), r(10)], [])
+  const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulse(vec.copy(api.current.translation()).negate().multiplyScalar(1.1))
+    api.current?.applyImpulseAtPoint(vec.copy(api.current.translation()).negate().multiplyScalar(0.1), new THREE.Vector3(pos.x, pos.y, 0))
   })
   return (
-    <RigidBody linearDamping={4} angularDamping={1} friction={0.1} position={pos} ref={api} colliders={false} restitution={0}>
+    <RigidBody enabledRotations={[true, true, true]} linearDamping={20} angularDamping={200} friction={40} position={pos} ref={api} colliders="cuboid" restitution={0}>
       {/* gravityScale={5} */}
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
       {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
       {/* Пересчитать значения, и ввести руками, для уменьшения нагрузки */}
-      <BallCollider args={[1.8]} />
+      {/* <BallCollider args={[1.8]} /> */}
       {children ? children : <TModel {...props} />}
-      {accent && <pointLight intensity={4} distance={2.5} color={props.color} />}
+      {/* {accent && <pointLight intensity={4} distance={2.5} color={props.color} />} */}
+    </RigidBody>
+  )
+}
+
+function ConnectorS({ position, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
+  const api = useRef()
+  const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
+  useFrame((state, delta) => {
+    delta = Math.min(0.1, delta)
+    api.current?.applyImpulseAtPoint(vec.copy(api.current.translation()).negate().multiplyScalar(0.1), new THREE.Vector3(pos.x, pos.y, 0))
+  })
+  return (
+    <RigidBody enabledRotations={[true, true, true]} linearDamping={20} angularDamping={200} friction={40} position={pos} ref={api} colliders="cuboid" restitution={0}>
+      {/* gravityScale={5} */}
+      {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
+      {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
+      {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
+      {/* Пересчитать значения, и ввести руками, для уменьшения нагрузки */}
+      {/* <BallCollider args={[1.8]} /> */}
+      {children ? children : <SModel {...props} />}
+      {/* {accent && <pointLight intensity={4} distance={2.5} color={props.color} />} */}
     </RigidBody>
   )
 }
@@ -137,26 +190,31 @@ function ConnectorV({ position, children, vec = new THREE.Vector3(), scale, r = 
 function Pointer({ vec = new THREE.Vector3() }) {
   const ref = useRef()
   useFrame(({ mouse, viewport }) => {
-    ref.current?.setNextKinematicTranslation(vec.set((mouse.x * viewport.width) / 8, (mouse.y * viewport.height) / 8, 0))
+    ref.current?.setTranslation(vec.set((mouse.x * viewport.width) / 2, (mouse.y * viewport.height) / 2, 0))
   })
+
+  // type="kinematicPosition"
   return (
-    <RigidBody position={[0, 0, 0]} type="kinematicPosition" colliders={false} ref={ref} restitution={0}>
-      <BallCollider args={[1]} />
+    <RigidBody position={[0, 0, 0]} colliders={false} ref={ref} restitution={0}>
+      <BallCollider args={[1.0]} />
     </RigidBody>
   )
 }
 
 function TModel({ children, color = 'white', roughness = 0, ...props }) {
   const ref = useRef()
-  const { nodes, materials } = useGLTF('tobacco-container-v2-v7.glb')
+  const { nodes, materials } = useGLTF('tobacco-container-v2-v8-v2.glb')
 
   useFrame((state, delta) => {
     easing.dampC(ref.current.material.color, color, 0.2, delta)
   })
 
   return (
-    <mesh ref={ref} castShadow receiveShadow scale={1.25} geometry={nodes.Banca_tabac.geometry}>
+    <mesh ref={ref} receiveShadow scale={1.25} geometry={nodes.Banca_tabac.geometry}>
+      {/* castShadow  */}
       <meshStandardMaterial metalness={0.2} roughness={roughness} map={materials.map} />
+      {/* <shadowMaterial transparent color="#251005" opacity={0.25} /> */}
+
       {/* <meshStandardMaterial metalness={0.2} roughness={roughness} /> */}
       {children}
     </mesh>
@@ -165,20 +223,20 @@ function TModel({ children, color = 'white', roughness = 0, ...props }) {
 
 function SModel({ children, color = 'white', roughness = 0, ...props }) {
   const ref = useRef()
-  // const { nodes, materials } = useGLTF('c-flaconb-v1.glb')
-  // const { nodes, materials } = useGLTF('c-transformed.glb')
-  const { nodes, materials } = useGLTF('flacon-v1.glb')
-  // const { nodes, materials } = useGLTF('tobacco-v1.glb')
-  console.log(materials)
+  const { nodes, materials } = useGLTF('tobacco-container-v2-v8-v2.glb')
 
-  // useFrame((state, delta) => {
-  //   easing.dampC(ref.current.material.color, color, 0.2, delta)
-  // })
+  useFrame((state, delta) => {
+    easing.dampC(ref.current.material.color, color, 0.2, delta)
+  })
+
   return (
-    <mesh ref={ref} scale={0.3} geometry={nodes.Circle003.geometry}>
-      <MeshTransmissionMaterial resolution={128} />
-      {/* clearcoat={1} thickness={0.1} anisotropicBlur={0.1} chromaticAberration={0.1} samples={8} */}
+    <mesh ref={ref} castShadow receiveShadow scale={1.25} geometry={nodes.Banca_tabac.geometry}>
+      {/* castShadow  */}
       {/* <meshStandardMaterial metalness={0.2} roughness={roughness} map={materials.map} /> */}
+      {/* <shadowMaterial transparent color="#251005" opacity={0.15} /> */}
+      {/* <MeshTransmissionMaterial clearcoat={1} thickness={0.1} anisotropicBlur={0.1} chromaticAberration={0.1} samples={1} resolution={128} /> */}
+      <meshPhysicalMaterial color="#efefef" transmission={0.1} roughness={0.25} thickness={15} envMapIntensity={1} />
+
       {/* <meshStandardMaterial metalness={0.2} roughness={roughness} /> */}
       {children}
     </mesh>
@@ -189,10 +247,10 @@ function Model({ children, color = 'white', roughness = 0, ...props }) {
   const ref = useRef()
   // const { nodes, materials } = useGLTF('c-flaconb-v1.glb')
   // const { nodes, materials } = useGLTF('c-transformed.glb')
-  const { nodes, materials } = useGLTF('flacon-v1-v3.glb')
+  const { nodes, materials } = useGLTF('flacon-v1-v6-v1.glb')
   // const { nodes, materials } = useGLTF('tobacco-v1.glb')
-  console.log(materials)
-  console.log(geometry)
+  // console.log(materials)
+  // console.log(geometry)
 
   useFrame((state, delta) => {
     easing.dampC(ref.current.material.color, color, 0.2, delta)
@@ -200,6 +258,7 @@ function Model({ children, color = 'white', roughness = 0, ...props }) {
   return (
     <mesh ref={ref} castShadow receiveShadow scale={0.3} geometry={nodes.Circle003.geometry}>
       <meshStandardMaterial metalness={0.2} roughness={roughness} map={materials.map} />
+      {/* <shadowMaterial transparent color="#251005" opacity={0.25} /> */}
       {/* <meshStandardMaterial metalness={0.2} roughness={roughness} /> */}
       {children}
     </mesh>
