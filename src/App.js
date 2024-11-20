@@ -65,11 +65,11 @@ function Scene(props) {
   const [accent, click] = useReducer((state) => ++state % accents.length, 0)
   const connectors = useMemo(() => shuffle(accent), [accent])
   return (
-    <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 10], rotation: [0, 0, 0], fov: 27.5, near: 1, far: 30 }} {...props}>
+    <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 10], rotation: [0, 0, 0], fov: 35.5, near: 1, far: 35 }} {...props}>
       <color attach="background" args={['#fff']} />
       <ambientLight intensity={0.1} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={0.1} castShadow />
-      <Physics /*debug*/ colliders="hull"
+      <Physics /*debug*/
         gravity={[0, 0, 0]}
       // numAdditionalFrictionIterations={0}
       // numSolverIterations={1}
@@ -80,17 +80,22 @@ function Scene(props) {
       >
         {/* numAdditionalFrictionIterations = 4 */}
         {/* numSolverIterations={8} */}
-        <Pointer />
+        <Pointer/>
         {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
-        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
-        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
-        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
-        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
-        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
-        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
-        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */}
         {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */}
-        {connectors.map((props, i) => <ConnectorS key={i} {...props} />) /* prettier-ignore */}
+
+        {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */}
+        
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <Connector key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorV key={i} {...props} />) /* prettier-ignore */} */}
+        {/* {connectors.map((props, i) => <ConnectorS key={i} {...props} />) /* prettier-ignore */} */}
 
 
 
@@ -120,23 +125,25 @@ function Scene(props) {
   )
 }
 
-function Connector({ position, rotation, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
+function Connector({ position, rotation, children, vec = new THREE.Vector3(), r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
   const api = useRef()
-  const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
-  const rot = useMemo(() => rotation || [r(2 * Math.PI, 2 * Math.PI, 2 * Math.PI)])
+  const pos = useMemo(() => position || [r(10) , r(5), r(2)], [])
+  // const rot = useMemo(() => rotation || [r(2 * Math.PI, 2 * Math.PI, 2 * Math.PI)])
+  const scale = 2.2;
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulseAtPoint(vec.copy(api.current.translation()).negate().multiplyScalar(0.3), new THREE.Vector3(pos.x, pos.y, 0))
+    api.current?.applyImpulse(vec.copy(api.current.translation()).normalize().multiply({ x: -0.05 * delta * scale, y: -0.6 * delta * scale , z: -0.25 * delta * scale }))
   })
   return (
-    <RigidBody enabledRotations={[true, true, true]} linearDamping={20} angularDamping={200} friction={40} position={pos} ref={api} colliders="cuboid" restitution={0}>
+    <RigidBody linearDamping={0.35} angularDamping={0.2} position={pos} rotation={[2 * Math.PI, 2 * Math.PI, 2 * Math.PI]} friction={0.3} ref={api} RigidBodyAutoCollider={true} dispose={null}>
       {/* gravityScale={5} */}
-      {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
+      {/* enabledRotations={[true, true, true]}  */}
+      {/* <BallCollider args={[ 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
       {/* <CuboidCollider args={[0.38, 0.38, 1.27]} /> */}
       {/* <CuboidCollider type="trimesh" /> */}
       {/* Пересчитать значения, и ввести руками, для уменьшения нагрузки */}
-      {/* <CuboidCollider/> */}
+      {/* <CuboidCollider args={[0.273, 1.58, 0.273,]}/> */}
       {/* <CuboidCollider args={[0.35, 1.35, 0.45]} /> */}
       {children ? children : <Model {...props} />}
       {/* {accent && <pointLight intensity={4} distance={2.5} color={props.color} />} */}
@@ -145,15 +152,17 @@ function Connector({ position, rotation, children, vec = new THREE.Vector3(), sc
 }
 
 
-function ConnectorV({ position, children, vec = new THREE.Vector3(), scale, r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
+function ConnectorV({ position, children, vec = new THREE.Vector3(), r = THREE.MathUtils.randFloatSpread, accent, ...props }) {
   const api = useRef()
   const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
+  // const rot = useMemo(() => rotation || [r(2 * Math.PI, 2 * Math.PI, 2 * Math.PI)])
+  const scale = 1.5;
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulseAtPoint(vec.copy(api.current.translation()).negate().multiplyScalar(0.1), new THREE.Vector3(pos.x, pos.y, 0))
+    api.current?.applyImpulse(vec.copy(api.current.translation()).normalize().multiply({ x: -0.05 * delta * scale, y: -0.5 * delta * scale , z: -0.25 * delta * scale }))
   })
   return (
-    <RigidBody enabledRotations={[true, true, true]} linearDamping={20} angularDamping={200} friction={40} position={pos} ref={api} colliders="cuboid" restitution={0}>
+    <RigidBody linearDamping={0.35} angularDamping={0.15} position={pos} friction={0.3} ref={api} RigidBodyAutoCollider={true} dispose={null}>
       {/* gravityScale={5} */}
       {/* <CuboidCollider args={[0.38, 1.27, 0.38]} /> */}
       {/* <CuboidCollider args={[1.27, 0.38, 0.38]} /> */}
@@ -171,7 +180,7 @@ function ConnectorS({ position, children, vec = new THREE.Vector3(), scale, r = 
   const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
-    api.current?.applyImpulseAtPoint(vec.copy(api.current.translation()).negate().multiplyScalar(0.1), new THREE.Vector3(pos.x, pos.y, 0))
+    api.current?.applyImpulse(vec.copy(api.current.translation()).normalize().multiply({ x: -5 * delta, y: -15 * delta , z: -5 * delta }))
   })
   return (
     <RigidBody enabledRotations={[true, true, true]} linearDamping={20} angularDamping={200} friction={40} position={pos} ref={api} colliders="cuboid" restitution={0}>
@@ -190,13 +199,13 @@ function ConnectorS({ position, children, vec = new THREE.Vector3(), scale, r = 
 function Pointer({ vec = new THREE.Vector3() }) {
   const ref = useRef()
   useFrame(({ mouse, viewport }) => {
-    ref.current?.setTranslation(vec.set((mouse.x * viewport.width) / 2, (mouse.y * viewport.height) / 2, 0))
+    vec.lerp({ x: (mouse.x * viewport.width) / 2, y: (mouse.y * viewport.height) / 2, z: 0 }, 0.5)
+    ref.current?.setTranslation(vec)
   })
 
-  // type="kinematicPosition"
   return (
-    <RigidBody position={[0, 0, 0]} colliders={false} ref={ref} restitution={0}>
-      <BallCollider args={[1.0]} />
+    <RigidBody position={[100, 100, 100]} colliders={false} ref={ref}>
+      <BallCollider args={[0.8]} />
     </RigidBody>
   )
 }
