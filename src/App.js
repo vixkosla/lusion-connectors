@@ -111,12 +111,12 @@ function Scene(props) {
         </Connector> */}
       </Physics>
       <EffectComposer disableNormalPass multisampling={1}>
-        <N8AO distanceFalloff={1} aoRadius={1} intensity={2} />
+        <N8AO distanceFalloff={4} aoRadius={3} intensity={4} />
       </EffectComposer>
-      <Environment preset="warehouse" resolution={128} intensity={0.1}>
+      <Environment resolution={128} intensity={0.3}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
-          {/* <Lightformer form="circle" intensity={4} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={2} /> */}
-          {/* <Lightformer form="circle" intensity={2} rotation-y={Math.PI / 2} position={[-5, 1, -1]} scale={2} /> */}
+          <Lightformer form="circle" intensity={4} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={2} />
+          <Lightformer form="circle" intensity={2} rotation-y={Math.PI / 2} position={[-5, 1, -1]} scale={2} />
           <Lightformer form="circle" intensity={1} rotation-y={Math.PI / 2} position={[-5, -1, -1]} scale={2} />
           <Lightformer form="circle" intensity={1} rotation-y={-Math.PI / 2} position={[10, 1, 0]} scale={8} />
         </group>
@@ -180,6 +180,7 @@ function ConnectorS({ position, children, vec = new THREE.Vector3(), scale, r = 
   const pos = useMemo(() => position || [r(10), r(5), r(2)], [])
   useFrame((state, delta) => {
     delta = Math.min(0.1, delta)
+    console.log(delta)
     api.current?.applyImpulse(vec.copy(api.current.translation()).normalize().multiply({ x: -5 * delta, y: -15 * delta , z: -5 * delta }))
   })
   return (
