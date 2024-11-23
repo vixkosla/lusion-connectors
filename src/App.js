@@ -4,7 +4,7 @@
 import * as THREE from 'three'
 import { useRef, useReducer, useMemo, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, MeshTransmissionMaterial, Environment, Lightformer, RoundedBox, Sky } from '@react-three/drei'
+import { useGLTF, MeshTransmissionMaterial, Environment, Lightformer, RoundedBox, Sky, Box, Circle } from '@react-three/drei'
 import { CuboidCollider, BallCollider, Physics, RigidBody } from '@react-three/rapier'
 import { EffectComposer, N8AO } from '@react-three/postprocessing'
 import { easing, geometry } from 'maath'
@@ -12,47 +12,44 @@ import { easing, geometry } from 'maath'
 const accents = ['#fff', '#00ffd7', '#ff4031']
 const shuffle = (accent = 0) => [
   { color: 'white', roughness: 0.1 },
-  { color: 'white', roughness: 0.75 },
-  { color: 'white', roughness: 0.75 },
-  { color: 'white', roughness: 0.1 },
-  { color: 'white', roughness: 0.75 },
+  { color: 'black', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.1 },
-  { color: 'white', roughness: 0.75 },
+  { color: 'black', roughness: 0.75 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
+  { color: 'black', roughness: 0.1 },
   { color: 'white', roughness: 0.1 },
-  { color: 'white', roughness: 0.1 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'white', roughness: 0.75 },
+  { color: 'black', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
-  { color: 'white', roughness: 0.75 },
-  { color: 'white', roughness: 0.1 },
-  { color: 'white', roughness: 0.75 },
-  { color: 'white', roughness: 0.1 },
+  { color: 'black', roughness: 0.1 },
   { color: 'white', roughness: 0.1 },
   { color: 'white', roughness: 0.75 },
   { color: 'white', roughness: 0.75 },
 
 
 
-  // { color: accents[accent], roughness: 0.1, accent: true },
-  // { color: accents[accent], roughness: 0.75, accent: true },
-  // { color: accents[accent], roughness: 0.1, accent: true }
+  { color: accents[accent], roughness: 0.1, accent: true },
+  { color: accents[accent], roughness: 0.75, accent: true },
+  { color: accents[accent], roughness: 0.1, accent: true }
 ]
 
 
 export const App = () => (
   <div className="container">
-    <div class="background-container">
-    </div>
-    <div class="cover-container">
-    </div>
+    {/* //   <div class="background-container">
+  //   </div>
+  //   <div class="cover-container">
+  //   </div> */}
     {/* <div className="nav">
       <h1 className="label" />
       <div />
@@ -75,15 +72,23 @@ function Scene(props) {
     <Canvas onClick={click} shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 10], rotation: [0, 0, 0], fov: 25.5, near: 1, far: 35 }} {...props}>
       {/* <Sky
         distance={450000}   // This controls the size of the sky
-        sunPosition={[0, 10, 0]}   // Position of the sun
-        inclination={0.5}   // This changes the angle of the sun
-        azimuth={0.25}      // This changes the sun's position on the horizon
-        turbidity={10}      // This controls how hazy the sky is
-        rayleigh={1}        // This controls the color of the sky (higher = more blue)
+        sunPosition={[0, 1, 0]}   // Position of the sun
+        // inclination={0.5}   // This changes the angle of the sun
+        // azimuth={0.25}      // This changes the sun's position on the horizon
+        // turbidity={10}      // This controls how hazy the sky is
+        // rayleigh={10}        // This controls the color of the sky (higher = more blue)
         mieCoefficient={0.5}   // This controls the intensity of the sun rays
         mieDirectionalG={0.8}   //
       /> */}
-      <color attach="background" args={['white']} />
+      <Sky
+        distance={450000} // Радиус купола
+        sunPosition={[0, 1, 0]} // Позиция солнца
+        inclination={1} // Наклон (0-1)
+        azimuth={0.25} // Угол (0-1)
+        rayleigh={0.3}        // This controls the color of the sky (higher = more blue)
+
+      />
+      <color attach="background" args={['blue']} />
       <ambientLight intensity={0.4} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={0.1} castShadow />
       <Physics /*debug*/
@@ -100,20 +105,28 @@ function Scene(props) {
         <Pointer />
 
         <RigidBody type="fixed">
-          <RoundedBox  args={[15, 8, 1]} radius={[0.1]} position={[0, 0, -5]} />
-          <shadowMaterial color="fef4ef" opacity={[0.95]}/>
+          <RoundedBox receiveShadow args={[5, 3, 1]} radius={[0.1]} opacity={0.85} position={[0, 0, 2]} >
+            <shadowMaterial transparent color="#251005" roughness={[0.75]}  />
+
+          </RoundedBox>
+          <Circle args={[0.5]} position={[0, 0, -5]} opacity={[1]}>
+            <meshBasicMaterial color="black" roughness={[0.75]} metalness={0.2}/>
+            {/* <shadowMaterial transparent color="#251005" opacity={1.85} /> */}
+
+
+          </Circle>
         </RigidBody>
 
 
         {connectors.map((props, i) => <Connector models={totalModels} key={i} index={i} {...props} />) /* prettier-ignore */}
-        <ConnectorV position={[0, 0, 0]}>
+        {/* <ConnectorV position={[0, 0, 0]}>
           <TModel>
             <MeshTransmissionMaterial clearcoat={1} thickness={0.1} anisotropicBlur={0.1} chromaticAberration={0.1} samples={8} resolution={1024} />
           </TModel>
-        </ConnectorV> 
+        </ConnectorV>  */}
       </Physics>
       <EffectComposer disableNormalPass multisampling={0.01}>
-        <N8AO distanceFalloff={0.5} aoRadius={0.25} intensity={1} />
+        <N8AO distanceFalloff={0.3} aoRadius={0.25} intensity={1.3} />
       </EffectComposer>
       <Environment resolution={256}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
@@ -143,7 +156,7 @@ function Connector({ index, position, rotation, children, vec = new THREE.Vector
 
   // console.log(pos)
 
-  const scale = 22;
+  const scale = 2;
 
   useFrame((state, delta) => {
     delta = Math.min(0.01, delta)
@@ -194,7 +207,7 @@ function Connector({ index, position, rotation, children, vec = new THREE.Vector
       {/* <CuboidCollider args={[0.273, 1.58, 0.273,]}/> */}
       {/* <CuboidCollider args={[0.35, 1.35, 0.45]} /> */}
       {children ? children : <ModelComponent ref={meshRef} {...props} />}
-      {<pointLight position={[0, 0.3, 0]} intensity={0.5} distance={0.5} color={props.color} />}
+      {<pointLight position={[0, 0.2, 0]} intensity={0.5} distance={0.5} color={props.color} />}
     </RigidBody>
   )
 }
